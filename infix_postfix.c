@@ -72,7 +72,7 @@ void evaluate() {
         else {
             op2 = stack1[top1--];
             op1 = stack1[top1--];
-            switch(postfix[i]) {
+            switch(eval_postfix[i]) {
                 case '+' : 
                     result = op1+op2;
                     break;
@@ -106,12 +106,12 @@ int main() {
         switch(choice) {
             case 1:
                 printf("Enter the expression\n");
-                scanf("%s",&infix);
+                scanf("%s",infix);
                 infix_to_postfix();
                 break;
             case 2:
                 printf("Enter the postfix expression\n");
-                scanf("%s",&eval_postfix);
+                scanf("%s",eval_postfix);
                 evaluate();
                 break;
             case 3:
