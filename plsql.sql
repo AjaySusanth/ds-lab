@@ -210,3 +210,67 @@ END;
 
 
 --------------------------------------------------------------------
+
+
+CREATE TABLE accounts (
+    account_number NUMBER PRIMARY KEY,
+    balance NUMBER
+);
+
+INSERT INTO accounts (account_number, balance) VALUES (101, 1000);
+INSERT INTO accounts (account_number, balance) VALUES (102, 600);
+INSERT INTO accounts (account_number, balance) VALUES (103, 400);
+
+DECLARE
+    -- Variables
+    v_account_number NUMBER := &account_number; -- Accept account number
+    v_balance NUMBER;
+    v_choice NUMBER;
+    v_amount NUMBER := 200; -- Amount to debit
+    v_min_balance NUMBER := 500; -- Minimum balance required
+BEGIN
+    -- Fetch the current balance for the given account number
+    SELECT balance INTO v_balance
+    FROM accounts
+    WHERE account_number = v_account_number;
+
+    -- Display menu
+    DBMS_OUTPUT.PUT_LINE('1. Debit');
+    DBMS_OUTPUT.PUT_LINE('2. Credit');
+    DBMS_OUTPUT.PUT_LINE('3. Show Balance');
+    DBMS_OUTPUT.PUT_LINE('Enter your choice (1/2/3): ');
+    v_choice := &choice; -- Accept user choice
+
+    -- Perform operation based on user choice
+    CASE v_choice
+        WHEN 1 THEN
+            -- Debit operation
+            IF v_balance - v_amount >= v_min_balance THEN
+                UPDATE accounts
+                SET balance = balance - v_amount
+                WHERE account_number = v_account_number;
+                DBMS_OUTPUT.PUT_LINE('Amount ' || v_amount || ' debited successfully.');
+            ELSE
+                DBMS_OUTPUT.PUT_LINE('Insufficient balance. Minimum balance of ' || v_min_balance || ' must be maintained.');
+            END IF;
+
+        WHEN 2 THEN
+            -- Credit operation
+            DBMS_OUTPUT.PUT_LINE('Enter the amount to credit: ');
+            UPDATE accounts
+            SET balance = balance + v_amount
+            WHERE account_number = v_account_number;
+            DBMS_OUTPUT.PUT_LINE('Amount ' || v_amount || ' credited successfully.');
+
+        WHEN 3 THEN
+            -- Show balance
+            DBMS_OUTPUT.PUT_LINE('Current Balance: ' || v_balance);
+
+        ELSE
+            DBMS_OUTPUT.PUT_LINE('Invalid choice.');
+    END CASE;
+
+    -- Commit the transaction
+    COMMIT;
+END;
+/
