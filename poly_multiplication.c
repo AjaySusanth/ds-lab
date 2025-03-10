@@ -43,7 +43,7 @@ struct node *readpoly()
 struct node *multiply(struct node *p1, struct node *p2)
 {
     struct node *p, *q, *last = NULL, *r = NULL, *temp, *head = NULL;
-
+        
     for (p = p1; p != NULL; p = p->link)
     {
         for (q = p2; q != NULL; q = q->link)
